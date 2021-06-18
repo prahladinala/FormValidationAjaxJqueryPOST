@@ -1,0 +1,489 @@
+<? ob_start(); ?>
+<?php
+
+include('db.php');
+
+$refFrom = $_GET['pid'];
+
+// if($refFrom == '')
+// {
+//     header('location: ../');
+// }
+
+$refFromName = $_GET['p'];
+
+//check referactive on not
+
+$checkActiverefer = mysqli_query($conn,"SELECT * FROM customer_refer_details WHERE refer_id='$refFrom' AND isDeleted='0'");
+while($row = mysqli_fetch_array($checkActiverefer))
+{
+    $ref_status = $row['ref_status'];
+}
+
+if($ref_status == '0')
+{
+    $refferId = $refFrom;
+}
+else
+{
+    $refferId = "url";
+}
+
+$utm_source = $_GET['utm_source'];
+
+$utm_url_save = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
+
+    if($utm_source != '')
+    {
+        $utm_source_save = $utm_source;
+    }
+    else if($refferId != '')
+    {
+        $utm_source_save = 'referral';
+    }
+    else
+    {
+        $utm_source_save = "manual";
+    }
+
+$utm_medium = $_GET['utm_medium'];
+
+    if($utm_medium != '')
+    {
+        $utm_medium_save = $utm_medium; 
+    }
+    else if($refferId != '')
+    {
+        $utm_medium_save = $refferId;
+    }
+    else
+    {
+        $utm_medium_save = "url"; 
+    }
+
+$utm_campaign = $_GET['utm_campaign'];
+
+    if($utm_campaign != '')
+    {
+        $utm_campaign_save = $utm_campaign;
+    }
+    else if($refferId != '')
+    {
+        $utm_campaign_save = $refFromName;
+    }
+    else
+    {
+        $utm_campaign_save = "Handysends";
+    }
+
+
+    $utm_content_save = "-"; 
+
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Signup</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../src/css/teldropdown.css">
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="../src/js/teldropdown.js"></script>
+</head>
+
+<style>
+    .intl-tel-input .flag-dropdown .selected-flag {
+        margin: 0px;
+    }
+
+    .error-highlight {
+        border-color: #b71c1c !important;
+        border-bottom-color: #b71c1c !important;
+        box-shadow: 0 1px 0 #b71c1c !important;
+    }
+
+    .error-highlight-off {
+        border-color: #0071a4 !important;
+        border-bottom-color: #0071a4 !important;
+        box-shadow: 0 1px 0 #0071a4 !important;
+    }
+</style>
+
+<body>
+
+    <div class="container mt-2">
+
+        <form action="">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="name">Name <b>
+                                <r style="color:red">*</r>
+                            </b> </label>
+                        <input type="name" onblur="removeError(this)" class="form-control formdata" maxlength="64"
+                            id="name" name="name" aria-describedby="name" placeholder="Enter name">
+                        <!--<g id="nameError"></g>-->
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address <b>
+                                <r style="color:red">*</r>
+                            </b> </label>
+                        <input type="email" onblur="removeError(this)" class="form-control formdata" maxlength="64"
+                            id="email" name="email" aria-describedby="email" placeholder="Enter email">
+                        <!--<g id="emailError"></g>-->
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password <b>
+                                <r style="color:red">*</r>
+                            </b> </label>
+                        <input type="password" onblur="removeError(this)" class="form-control formdata" min="8"
+                            id="password" name="password" pattern=".{8,20}" placeholder="********">
+                        <!--<g id="pwdError"></g>-->
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Confirm Password <b>
+                                <r style="color:red">*</r>
+                            </b> </label>
+                        <input type="password" onblur="removeError(this)" class="form-control formdata" min="8"
+                            id="confirmpassword" name="confirmpassword" pattern=".{8,20}" placeholder="********">
+                        <!--<g id="cpwdError"></g>-->
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number <b>
+                                <r style="color:red">*</r>
+                            </b> </label>
+                        <input type="tel" onblur="removeError(this)" class="form-control formdata" maxlength="14"
+                            id="mobile-number" name="phone" aria-describedby="phone" placeholder="Enter Phone Number">
+                        <!--<g id="phoneError"></g>-->
+                    </div>
+                    <div class="form-group">
+                        <label for="cname">Company Name <b>
+                                <r style="color:red">*</r>
+                            </b> </label>
+                        <input type="name" onblur="removeError(this)" class="form-control formdata" maxlength="255"
+                            id="cname" name="cname" aria-describedby="cname" placeholder="Enter Company Name">
+                        <!--<g id="cnameError"></g>-->
+                    </div>
+                    <div class="form-group">
+                        <label for="web">Website <b>
+                                <r style="color:red">*</r>
+                            </b> </label>
+                        <input type="text" onblur="removeError(this)" class="form-control formdata" maxlength="255"
+                            id="web" name="web" aria-describedby="web" placeholder="Enter Website">
+                        <!--<g id="webError"></g>-->
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="gst">GST </label>
+                        <input type="text" onblur="removeError(this)" class="form-control formdata" maxlength="15"
+                            id="gst" name="gst" aria-describedby="gst" placeholder="GST">
+                        <!--<g id="gstError"></g>-->
+                    </div>
+                    <div class="form-group">
+                        <label for="addr1">Address Line 1 <b>
+                                <r style="color:red">*</r>
+                            </b> </label>
+                        <input type="text" onblur="removeError(this)" class="form-control formdata" maxlength="50"
+                            id="addr1" name="addr1" aria-describedby="addr1" placeholder="Enter Address Line 1">
+                        <!--<g id="addr1Error"></g>-->
+                    </div>
+                    <div class="form-group">
+                        <label for="addr2">Address Line 2 </label>
+                        <input type="text" onblur="removeError(this)" class="form-control formdata" maxlength="50"
+                            id="addr2" name="addr2" aria-describedby="addr2" placeholder="Enter Address Line 2">
+                        <!--<g id="addr2Error"></g>-->
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleFormControlSelect1">Country <b>
+                                <r style="color:red">*</r>
+                            </b> </label>
+                        <select class="form-control myforminput formdata" name="userCountry"
+                            onchange="getStates(this.value)" style="background-color: #fff;" id="countryInput">
+                            <option value="">-- Country --</option>
+                            <?php
+                            
+                                include('db.php');
+                                      
+                                $getcountries = mysqli_query($conn,"SELECT * FROM helper_country ORDER BY name");
+                                while($row = mysqli_fetch_array($getcountries))
+                                {
+                                    echo '<option value="'.$row['ID'].'">'.$row['name'].'</option>';
+                                }
+                                          
+                            ?>
+                        </select>
+                        <g id="countryError"></g>
+                    </div>
+                    <div class="form-group">
+                        <label for="state">State <b>
+                                <r style="color:red">*</r>
+                            </b> </label>
+                        <select class="form-control myforminput formdata" name="userState" id="state_here"
+                            onchange="getCity(this.value)">
+                            <option>-- Select State --</option>
+                        </select>
+                        <!--<g id="stateError"></g>-->
+                    </div>
+                    <div class="form-group">
+                        <label for="city">City <b>
+                                <r style="color:red">*</r>
+                            </b> </label>
+                        <select class="form-control myforminput formdata" name="userCity" id="city_here">
+                            <option>-- Select City --</option>
+                        </select>
+                        <!--<g id="cityError"></g>-->
+                    </div>
+                    <div class="form-group">
+                        <label for="addr2">Zip Code <b>
+                                <r style="color:red">*</r>
+                            </b> </label>
+                        <input onblur="removeError(this)" type="text" class="form-control formdata" maxlength="6"
+                            id="zip" name="zip" aria-describedby="zip" placeholder="Eg: 522101">
+                        <!--<g id="zipError"></g>-->
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" name="resgiter_now" id="submit_button"
+                class="btn btn-block btn-primary">Submit</button>
+
+        </form>
+    </div>
+
+    <!--<div class="alert alert-success text-center" id="displaySuccess" role="alert" style="display:none">-->
+    <!--  Your form submitted successfully! our team will get back to you soon :-)-->
+    <!--</div>-->
+
+    <!--<div class="alert alert-success text-center" id="displayFailed" role="alert" style="display:none">-->
+    <!--  Facing some issues! Please try again :-(-->
+    <!--</div>-->
+
+</body>
+
+</html>
+<script>
+
+    function getStates(cCode) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+
+                document.getElementById("state_here").innerHTML = this.responseText;
+
+            }
+        };
+        xmlhttp.open("GET", "../functions/getStateByCountry.php?cCode=" + cCode, true);
+        xmlhttp.send();
+
+    }
+
+    function getCity(cCode) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+
+                document.getElementById("city_here").innerHTML = this.responseText;
+
+            }
+        };
+        xmlhttp.open("GET", "../functions/getCityByState.php?cCode=" + cCode, true);
+        xmlhttp.send();
+
+    }
+
+</script>
+
+
+<script>
+    // document.getElementById("submit_button").disabled = true;
+    function removeError(e) {
+        $(e).removeClass('error-highlight');
+    }
+    $(document).ready(function () {
+
+        $("#submit_button").click(function () {
+
+            var name = $('#name').val();
+            var email = $('#email').val();
+            var password = $('#password').val();
+            var confirmpassword = $('#confirmpassword').val();
+            var phone = $('#mobile-number').val();
+            var cname = $('#cname').val();
+            var web = $('#web').val();
+            var gst = $('#gst').val();
+            var addr1 = $('#addr1').val();
+            var addr2 = $('#addr2').val();
+            var country = $('#countryInput').val();
+            var state = $('#state_here').val();
+            var city = $('#city_here').val();
+            var zip = $('#zip').val();
+            var status = true;
+
+
+            if (name == '' || name == undefined) {
+                $('#name').addClass('error-highlight');
+                status = false;
+                // $('#nameError').html('<r style="color:red">Name is required*</r>');
+                document.getElementById("submit_button").disabled = true;
+            }
+            if (email == '' || email == undefined) {
+                $('#email').addClass('error-highlight');
+                status = false;
+                // $('#email').html('<r style="color:red">Email is required*</r>');
+                document.getElementById("submit_button").disabled = true;
+            } else {
+                var regExp = /^[\w\-\.\+]+\@[a-zA-Z0-9\.\-]+\.[a-zA-z0-9]{2,4}$/;
+                if (!email.match(regExp)) {
+                    $('#email').addClass('error-highlight');
+                    status = false;
+                }
+            }
+
+            if (password == "" || password == undefined) {
+                $('#pwd').addClass('error-highlight');
+                status = false;
+            }
+            else if (confirmpassword == "" || confirmpassword == undefined) {
+                $('#cpwd').addClass('error-highlight');
+                status = false;
+            }
+            else if (password != confirmpassword) {
+                $('#pwd').addClass('error-highlight');
+                $('#cpwd').addClass('error-highlight');
+                status = false;
+            }
+            else {
+                var regExp = /^(?=.*\d)(?=.*[a-zA-Z]).{8,}$/;
+                if (!confirmpassword.match(regExp)) {
+                    $('#pwd').addClass('error-highlight');
+                    $('#cpwd').addClass('error-highlight');
+                    status = false;
+                }
+            }
+
+            if (phone == '' || phone == undefined) {
+                $('#mobile-number').addClass('error-highlight');
+                status = false;
+                // $('#phoneError').html('<r style="color:red">Mobile Number is required*</r>');
+            }
+
+            if (cname == '' || cname == undefined) {
+                $('#cname').addClass('error-highlight');
+                status = false;
+                // $('#cnameError').html('<r style="color:red">Company Name is required*</r>');
+            }
+
+            if (web == '' || web == undefined) {
+                $('#web').addClass('error-highlight');
+                status = false;
+                // $('#webError').html('<r style="color:red">Website is required*</r>');
+            }
+
+            if (addr1 == '' || addr1 == undefined) {
+                $('#addr1').addClass('error-highlight');
+                status = false;
+                // $('#addr1Error').html('<r style="color:red">Address is required*</r>');
+            }
+
+            if (country == '') {
+                $('#countryInput').addClass('error-highlight');
+                status = false;
+                // $('#countryError').html('<r style="color:red">Country is required*</r>');
+            }
+
+            if (state == '') {
+                $('#state_here').addClass('error-highlight');
+                status = false;
+                // $('#stateError').html('<r style="color:red">State is required*</r>');
+            }
+
+            if (city == '') {
+
+                $('#city_here').addClass('error-highlight');
+                status = false;
+                // $('#cityError').html('<r style="color:red">City is required*</r>');
+            }
+
+            if (zip == '' || zip == undefined) {
+                $('#zip').addClass('error-highlight');
+                status = false;
+                // $('#zipError').html('<r style="color:red">Zipcode is required*</r>');
+            }
+
+            if (status) {
+                setTimeout(function () {
+                    var objData = { 'UserName': name, 'Email': email, 'Password': password, 'PhoneNumber': phone, 'CompanyName': cname, 'Website': web, 'GST': gst, 'AddressOne': addr1, 'AddressTwo': addr2, 'Country': country, 'State': state, 'City': city, 'Zip': zip };
+                    $.ajax({
+                        url: 'functions/iframeSuccess.php',
+                        type: "POST",
+                        contentType: "application/json;charset=utf-8",
+                        dataType: "json",
+                        data: JSON.stringify({ data: objData }),
+                        success: function (result) {
+
+                            if (result == "USERNAMEEXISTS") {
+                                $('.alert-message').text("");
+                                $('.alert-message').text("Username already exists.");
+                                $('#alertDanger').show();
+                                $('#username').addClass('error-highlight');
+                                setTimeout(function () {
+                                    $(".altMsg").hide();
+                                }, 5000);
+                            }
+                            else if (result != "FAILED") {
+                                clearform();
+                                $('.alert-message').text("");
+                                $('.alert-message').text("Signup completed successfully.");
+                                $('#alertSuccess').show();
+                            }
+                            else {
+                                $('.alert-message').text("");
+                                $('.alert-message').text("Failed. Contact Support Team.");
+                                $('#alertDanger').show();
+                            }
+                            setTimeout(function () {
+                                $(".altMsg").hide();
+                            }, 5000);
+                            $('#submit_button').prop("disabled", false);
+
+                        },
+                        complete: function () {
+                            $('#submit_button').prop("disabled", false);
+
+                        },
+                        error: function (result) {
+                            $('#submit_button').prop("disabled", false);
+
+                        },
+                        cache: false,
+                    });
+                }, 2000);
+            }
+            else {
+
+                $('#submit_button').prop("disabled", false);
+                // $('#loader').hide();
+                // $('#UILoader').hide();
+            }
+
+        });
+    });
+
+
+</script>
+
+
+
+<script>
+    $("#mobile-number").intlTelInput();
+</script>
+
+<? ob_flush(); ?>
